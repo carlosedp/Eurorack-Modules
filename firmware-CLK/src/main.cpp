@@ -194,7 +194,7 @@ void HandleEncoderClick() {
                 menuMode = 27;
                 break;
             case 28: // Select Euclidean rhythm output to edit
-                menuMode = 24;
+                menuMode = 28;
                 break;
             case 29:
                 outputs[euclideanOutput].ToggleEuclidean();
