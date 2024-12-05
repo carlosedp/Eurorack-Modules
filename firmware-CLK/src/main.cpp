@@ -1060,10 +1060,10 @@ void ClockReceived() {
         }
         for (int i = 0; i < NUM_OUTPUTS; i++) {
             outputs[i].SetExternalClock(true);
+            outputs[i].IncrementInternalCounter();
         }
         usingExternalClock = true;
         tickCounter = 0;
-        ClockPulse(1);
     }
     externalTickCounter++;
 }

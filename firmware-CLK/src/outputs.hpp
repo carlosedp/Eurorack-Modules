@@ -33,6 +33,7 @@ class Output {
     void TogglePulse() { _isPulseOn = !_isPulseOn; }
     bool HasPulseChanged();
     void SetExternalClock(bool state) { _externalClock = state; }
+    void IncrementInternalCounter() { _internalPulseCounter++; }
 
     // Output State
     bool GetOutputState() { return _state; }
@@ -150,6 +151,7 @@ class Output {
     // Functions
     void StartWaveform();
     void StopWaveform();
+    void ResetWaveform();
     void StopWave();
     void GenerateTriangleWave(int);
     void GenerateSineWave(int);
@@ -198,14 +200,14 @@ void Output::Pulse(int PPQN, unsigned long globalTick) {
                     StartWaveform();
                 } else {
                     // We stop the waveform directly if the pulse probability is not met since StopWaveform() is used for the square wave
-                    _waveActive = false;
+                    ResetWaveform();
                 }
             } else {
                 // If using Euclidean rhythm, check if the current step is active
                 if (_euclideanRhythm[_euclideanStepIndex] == 1) {
                     StartWaveform();
                 } else {
-                    _waveActive = false;
+                    ResetWaveform();
                 }
                 _euclideanStepIndex++;
                 // Restart the Euclidean rhythm if it reaches the end
@@ -222,9 +224,6 @@ void Output::Pulse(int PPQN, unsigned long globalTick) {
                 generatePulse();
             } else if (_internalPulseCounter % _externalPulseDuration == 0) {
                 StopWaveform();
-            }
-            if (PPQN == 1) {
-                _internalPulseCounter++;
             }
         } else {
             // Handle internal clock timing
@@ -269,12 +268,12 @@ void Output::StartWaveform() {
         break;
     case WaveformType::Triangle:
     case WaveformType::Sawtooth:
-        _waveValue = 0.0f;
-        _triangleWaveStep = 0.0f; // Will be calculated in GenerateTriangleWave()
-        break;
     case WaveformType::Sine:
-        _sineWaveAngle = 0.0f;
-        _waveValue = 0.0f; // Will be calculated in GenerateSineWave()
+        if (!_externalClock) {
+            _waveValue = 0.0f;
+            _triangleWaveStep = 0.0f; // Will be calculated in GenerateTriangleWave()
+            _sineWaveAngle = 0.0f;
+        }
         break;
     case WaveformType::Random:
     case WaveformType::SmoothRandom:
@@ -282,6 +281,14 @@ void Output::StartWaveform() {
         SetPulse(true);
         break;
     }
+}
+
+void Output::ResetWaveform() {
+    _waveActive = false;
+    _waveDirection = true;
+    _waveValue = 0.0f;
+    _triangleWaveStep = 0.0f;
+    _sineWaveAngle = 0.0f;
 }
 
 // Function to stop waveform generation
@@ -426,7 +433,7 @@ int Output::GetOutputLevel() {
         case WaveformType::Sawtooth:
         case WaveformType::Random:
         case WaveformType::SmoothRandom:
-            // Take into account the triangle wave value and the _level and _offset values
+            // Take into account the wave value and the _level and _offset values
             adjustedLevel = _isPulseOn ? constrain((_waveValue * _level) / 100 + _offset, 0, 100) : _offset;
             return adjustedLevel * MaxDACValue / 100;
         default:
