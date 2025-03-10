@@ -170,11 +170,13 @@ They support the following:
 - Sawtooth: A sawtooth wave with adjustable duty cycle, level and offset.
 - Sine: A sine wave with adjustable duty cycle, level and offset.
 - Parabolic: A parabolic wave with adjustable duty cycle, level and offset.
-- Exponential Envelope: An exponential envelope with adjustable level and offset. Triggered by each pulse.
-- Logarithm Envelope: A logarithm envelope with adjustable level and offset. Triggered by each pulse.
+- Logarithm Envelope: A logarithm envelope (starts at 0% raising to 100%) with adjustable level and offset. Triggered by clock pulses.
+- Exponential Envelope: An exponential envelope (starts at 0% raising to 100%) with adjustable level and offset. Triggered by clock pulses.
+- Inverted Logarithm Envelope: An inverted logarithm envelope (starts at 100% decaying to 0) with adjustable level and offset. Triggered by clock pulses.
+- Inverted Exponential Envelope: An inverted exponential envelope (starts at 100% decaying to 0) with adjustable level and offset. Triggered by clock pulses.
 - Noise: A random signal with adjustable level and offset. Continuous.
 - Smooth Noise: A smooth random signal with adjustable level and offset. Continuous.
-- Sample & Hold: A sample and hold signal based on noise with adjustable level and offset. Triggered by each pulse.
+- Sample & Hold: A sample and hold signal based on noise with adjustable level and offset. Triggered by clock pulses.
 - AD Envelope: An Attack-Decay envelope (no sustain while gate is held) with adjustable level and offset. Triggered by a CV input.
 - AR Envelope: An Attack-Release envelope (sustain is held at max level while gate is on) with adjustable level and offset. Triggered by a CV input.
 - ADSR Envelope: An Attack-Decay-Sustain-Release envelope with adjustable level and offset. Triggered by a CV input.

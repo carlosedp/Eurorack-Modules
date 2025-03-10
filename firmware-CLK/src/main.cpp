@@ -1519,6 +1519,11 @@ void ToggleMasterState() {
 
 // Set the master state and update all outputs
 void SetMasterState(bool state) {
+    // If toggling from off to on, reset the tick counters
+    if (!masterState && state) {
+        tickCounter = 0;
+        externalTickCounter = 0;
+    }
     masterState = state;
     for (int i = 0; i < NUM_OUTPUTS; i++) {
         outputs[i].SetMasterState(state);
